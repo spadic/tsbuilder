@@ -23,7 +23,7 @@ for (uint64_t ts_index {0}; ts_index < NUM_TIMESLICES; ts_index++) {
         comp_index = ts.append_component(NUM_MICROSLICES, ts_index);
 
         for (uint64_t mc_index {0}; mc_index < NUM_MICROSLICES; mc_index++) {
-            auto mc_size = SIZE + ((~SIZE + 1) % 8); // round up to multiple of 8
+            uint32_t mc_size = SIZE + ((~SIZE + 1) % 8); // round up to multiple of 8
             fles::MicrosliceDescriptor mc_desc {
                 0xDD, // hdr_id
                 0x01, // hdr_ver
