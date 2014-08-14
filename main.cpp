@@ -18,8 +18,9 @@ fles::TimesliceOutputArchive ar {"output.tsa"};
 for (uint64_t ts_index {0}; ts_index < NUM_TIMESLICES; ts_index++) {
     fles::StorableTimeslice ts {NUM_MICROSLICES};
 
-    for (uint16_t comp_index {0}; comp_index < NUM_COMPONENTS; comp_index++) {
-        ts.append_component(NUM_MICROSLICES, ts_index);
+    uint16_t comp_index {0};
+    while (comp_index < NUM_COMPONENTS) {
+        comp_index = ts.append_component(NUM_MICROSLICES, ts_index);
 
         for (uint64_t mc_index {0}; mc_index < NUM_MICROSLICES; mc_index++) {
             auto mc_size = SIZE + ((~SIZE + 1) % 8); // round up to multiple of 8
