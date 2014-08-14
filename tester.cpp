@@ -30,12 +30,36 @@ void print_descriptor(const fles::MicrosliceDescriptor& desc)
     printf("offset: 0x%X\n", desc.offset);
 }
 
+void print_mc_contents(const uint8_t *data, size_t len)
+{
+    for (size_t i {0}; i < len; i++) {
+        printf("%02X", data[i]);
+        printf("%s", (i+1) % 4 ? " " : "\n");
+    }
+}
+
+uint32_t calc_mc_crc(const uint8_t *data, size_t len)
+{
+    auto word = reinterpret_cast<const uint64_t *>(data);
+    size_t num_words = len / sizeof(uint64_t);
+    uint32_t crc {0};
+    for (size_t i {0}; i < num_words; i++) {
+        crc ^= (word[i] >> 32); // higher 32 bit
+        crc ^= (word[i] & 0xFFFFFFFF); // lower 32 bit
+    }
+    return crc; // is this correct?
+}
 
 void check_microslice(const fles::Timeslice& ts, size_t comp_idx, size_t mc_idx)
 {
     auto& desc = ts.descriptor(comp_idx, mc_idx);
     printf("---- microslice %d ----\n", mc_idx);
     print_descriptor(desc);
+    printf("- - contents - -\n");
+    const uint8_t *data = ts.content(comp_idx, mc_idx);
+    size_t len = desc.size;
+    print_mc_contents(data, len);
+    printf("CRC: 0x%08X\n", calc_mc_crc(data, len));
 }
 
 void read_timeslice_archive(const std::string& filename)
