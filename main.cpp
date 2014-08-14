@@ -8,8 +8,9 @@ const size_t NUM_TIMESLICES {10};
 const size_t NUM_COMPONENTS {1};
 const size_t NUM_MICROSLICES {100};
 
-const uint8_t SYS_ID {0x40}; // TRD
-const uint8_t SYS_VER {0x01};
+const uint16_t EQ_ID[NUM_COMPONENTS] {1};
+const uint8_t SYS_ID[NUM_COMPONENTS] {0x40}; // TRD
+const uint8_t SYS_VER[NUM_COMPONENTS] {0x01};
 
 const size_t SIZE {20}; // TODO
 
@@ -27,10 +28,10 @@ for (uint64_t ts_index {0}; ts_index < NUM_TIMESLICES; ts_index++) {
             fles::MicrosliceDescriptor mc_desc {
                 0xDD, // hdr_id
                 0x01, // hdr_ver
-                comp_index, // eq_id
+                EQ_ID[comp_index],
                 0, // flags
-                SYS_ID, // sys_id TODO
-                SYS_VER, // sys_ver TODO
+                SYS_ID[comp_index],
+                SYS_VER[comp_index],
                 mc_index, // idx TODO
                 0, // crc
                 mc_size, // size TODO
