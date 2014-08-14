@@ -48,7 +48,7 @@ void read_timeslice_archive(const std::string& filename)
         printf("got timeslice with %d components\n", nc);
         for (size_t c {0}; c < nc; c++) {
             size_t nm = ts.num_microslices(c);
-            printf("component %d has %d microslices\n", nc, nm);
+            printf("component %d has %d microslices\n", c, nm);
             for (size_t m {0}; m < nm; m++) {
                 check_microslice(ts, c, m);
             }
