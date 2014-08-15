@@ -1,5 +1,6 @@
 #include "StorableTimeslice.hpp"
 #include "TimesliceOutputArchive.hpp"
+#include <unordered_map>
 
 int main()
 {
@@ -18,6 +19,31 @@ fles::TimesliceOutputArchive ar {"output.tsa"};
 
 for (uint64_t ts_index {0}; ts_index < NUM_TIMESLICES; ts_index++) {
     fles::StorableTimeslice ts {NUM_MICROSLICES};
+
+// one timeslice per ts_index
+std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
+
+std::unordered_map<
+    uint16_t, // eq_id
+    std::unordered_map<
+        uint64_t, // mc_index
+        std::pair<fles::MicrosliceDescriptor, uint8_t *> // desc, content
+    >
+> microslices;
+
+void add_component_from_eq_id(uint16_t eq_id, uint64_t mc_index_start)
+{
+    uint64_t ts_index = mc_index_start/TIMESLICE_LENGTH;
+    // get timeslice corresponding to ts_index, create if necessary
+    auto& ts = (*timeslices.emplace(ts_index, TIMESLICE_LENGTH).first).second;
+    uint32_t comp_index = ts.append_component(TIMESLICE_LENGTH, ts_index);
+    uint64_t mc_index {mc_index_start};
+    for (uint64_t mc_index {mc_index_start};
+            mc_index < mc_index_start + TIMESLICE_LENGTH; mc_index++) {
+        auto& mc_item = microslices[eq_id][comp_index];
+        ts.append_microslice(comp_index, mc_index, mc_item.first, mc_item.second);
+    }
+}
 
     uint16_t comp_index {0};
     while (comp_index < NUM_COMPONENTS) {
