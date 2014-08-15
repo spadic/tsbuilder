@@ -23,6 +23,7 @@ MC_MAX = 10
 TS_LEN = 4
 
 microslice_sources = {
+    # eq_id: {mc_index: content, ...}
     21: {4: 'hans', 5: 'dieter', 8: 'steffen'},
     33: {5: 'wurst', 6: 'brot'}
 }
