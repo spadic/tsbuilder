@@ -24,9 +24,9 @@ struct MicrosliceSource {
         // where
         auto it = _microslices.find(mc_index);
         if (it != end(_microslices)) {
-            it->second = mc;
+            it->second = mc; // overwrite existing
         } else {
-            _microslices.insert(it, {mc_index, mc});
+            _microslices.insert(it, {mc_index, mc}); // add new
         }
     };
 
