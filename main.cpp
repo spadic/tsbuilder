@@ -22,16 +22,6 @@ fles::TimesliceOutputArchive ar {"output.tsa"};
 // one timeslice per timeslice index
 std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
 
-fles::MicrosliceDescriptor default_mc_descriptor()
-{
-    fles::MicrosliceDescriptor desc;
-    desc.hdr_id = 0xDD;
-    desc.hdr_ver = 0x01;
-    desc.flags = 0;
-    desc.crc = 0;
-    return desc;
-};
-
 struct MicrosliceContainer {
     fles::MicrosliceDescriptor desc;
     uint8_t *content;
@@ -44,10 +34,8 @@ struct MicrosliceSource {
     void add(uint64_t mc_index, std::vector<uint8_t> content)
     {
         // what
-        auto desc = _make_desc();
-        desc.size = content.size();
-        MicrosliceContainer mc {desc, content.data()};
-
+        MicrosliceContainer mc {_desc(mc_index, content.size()),
+                                content.data()};
         // where
         auto it = _microslices.find(mc_index);
         if (it != end(_microslices)) {
@@ -63,8 +51,7 @@ struct MicrosliceSource {
         if (it != end(_microslices)) {
             return it->second;
         } else {
-            auto desc = _make_desc();
-            desc.size = 0;
+            auto desc = _desc(mc_index, 0);
             return {desc, nullptr};
         }
     };
@@ -73,13 +60,17 @@ private:
     uint16_t _eq_id;
     uint8_t _sys_id, _sys_ver;
     std::unordered_map<uint64_t, MicrosliceContainer> _microslices;
-    fles::MicrosliceDescriptor _make_desc()
+    fles::MicrosliceDescriptor _desc(uint64_t index, uint32_t size)
     {
-        auto desc = default_mc_descriptor();
-        desc.eq_id = _eq_id;
-        desc.sys_id = _sys_id;
-        desc.sys_ver = _sys_ver;
-        return desc;
+        return {0xDD, // hdr_id
+                0x01, // hdr_ver
+                _eq_id,
+                0, // flags
+                _sys_id,
+                _sys_ver,
+                index,
+                0, // crc
+                size};
     };
 };
 
