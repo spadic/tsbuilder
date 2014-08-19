@@ -59,17 +59,18 @@ private:
     std::unordered_map<uint64_t, MicrosliceContainer> _microslices;
 };
 
-std::unordered_map<
+typedef std::unordered_map<
     uint16_t, // eq_id
     MicrosliceSource
-> mc_sources;
+> MicrosliceSourceMap;
 
 // one timeslice per timeslice index
 std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
 
 const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
 
-void add_component_from_eq_id(uint16_t eq_id, uint64_t ts_index)
+void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
+                              uint16_t eq_id, uint64_t ts_index)
 {
     // get timeslice corresponding to timeslice index, create if necessary
     // roughly equivalent to the following Python code:
