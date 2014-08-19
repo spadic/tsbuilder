@@ -5,22 +5,7 @@
 #include <cstdio>
 
 
-const size_t NUM_COMPONENTS {1};
-const size_t NUM_MICROSLICES {100}; // total, over all timeslices
-const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
-
-const uint16_t EQ_ID[NUM_COMPONENTS] {1};
-const uint8_t SYS_ID[NUM_COMPONENTS] {0x40}; // TRD
-const uint8_t SYS_VER[NUM_COMPONENTS] {0x01};
-
-const size_t SIZE {20}; // TODO
-
-fles::TimesliceOutputArchive ar {"output.tsa"};
-
 //-------------------
-
-// one timeslice per timeslice index
-std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
 
 struct MicrosliceContainer {
     fles::MicrosliceDescriptor desc;
@@ -59,7 +44,6 @@ struct MicrosliceSource {
 private:
     uint16_t _eq_id;
     uint8_t _sys_id, _sys_ver;
-    std::unordered_map<uint64_t, MicrosliceContainer> _microslices;
     fles::MicrosliceDescriptor _desc(uint64_t index, uint32_t size)
     {
         return {0xDD, // hdr_id
@@ -72,12 +56,18 @@ private:
                 0, // crc
                 size};
     };
+    std::unordered_map<uint64_t, MicrosliceContainer> _microslices;
 };
 
 std::unordered_map<
     uint16_t, // eq_id
     MicrosliceSource
 > mc_sources;
+
+// one timeslice per timeslice index
+std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
+
+const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
 
 void add_component_from_eq_id(uint16_t eq_id, uint64_t ts_index)
 {
@@ -105,6 +95,17 @@ void add_component_from_eq_id(uint16_t eq_id, uint64_t ts_index)
 }
 
 //-------------------
+
+const size_t NUM_COMPONENTS {1};
+const size_t NUM_MICROSLICES {100}; // total, over all timeslices
+
+const uint16_t EQ_ID[NUM_COMPONENTS] {1};
+const uint8_t SYS_ID[NUM_COMPONENTS] {0x40}; // TRD
+const uint8_t SYS_VER[NUM_COMPONENTS] {0x01};
+
+const size_t SIZE {20}; // TODO
+
+fles::TimesliceOutputArchive ar {"output.tsa"};
 
 int main()
 {
