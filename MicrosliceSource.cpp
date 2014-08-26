@@ -1,5 +1,7 @@
 #include "MicrosliceSource.hpp"
 
+namespace fles {
+
 MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id, uint8_t sys_ver)
 : _eq_id {eq_id},
   _sys_id {sys_id},
@@ -7,7 +9,7 @@ MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id, uint8_t sys_v
 {
 };
 
-MicrosliceSource::add(uint64_t mc_index, std::vector<uint8_t> content)
+void MicrosliceSource::add(uint64_t mc_index, std::vector<uint8_t> content)
 {
     // what
     auto mc = MicrosliceContainer {_desc(mc_index, content.size()),
@@ -21,7 +23,7 @@ MicrosliceSource::add(uint64_t mc_index, std::vector<uint8_t> content)
     }
 }
 
-MicrosliceSource::get(uint64_t mc_index)
+MicrosliceContainer MicrosliceSource::get(uint64_t mc_index)
 {
     auto it = _microslices.find(mc_index);
     if (it != end(_microslices)) {
@@ -32,7 +34,7 @@ MicrosliceSource::get(uint64_t mc_index)
     }
 }
 
-MicrosliceSource::_desc(uint64_t index, uint32_t size)
+MicrosliceDescriptor MicrosliceSource::_desc(uint64_t index, uint32_t size)
 {
     return {0xDD, // hdr_id
             0x01, // hdr_ver
@@ -43,4 +45,6 @@ MicrosliceSource::_desc(uint64_t index, uint32_t size)
             index,
             0, // crc
             size};
+}
+
 }
