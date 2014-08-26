@@ -59,10 +59,8 @@ private:
     std::unordered_map<uint64_t, MicrosliceContainer> _microslices;
 };
 
-typedef std::unordered_map<
-    uint16_t, // eq_id
-    MicrosliceSource
-> MicrosliceSourceMap;
+// one MicrosliceSource per eq_id
+using MicrosliceSourceMap = std::unordered_map<uint16_t, MicrosliceSource>;
 
 // one timeslice per timeslice index
 std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
