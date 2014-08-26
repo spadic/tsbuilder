@@ -1,3 +1,4 @@
+#include "MicrosliceSource.hpp"
 #include "StorableTimeslice.hpp"
 #include "TimesliceOutputArchive.hpp"
 #include <unordered_map>
@@ -7,57 +8,6 @@
 
 //-------------------
 
-struct MicrosliceContainer {
-    fles::MicrosliceDescriptor desc;
-    uint8_t *content;
-};
-
-struct MicrosliceSource {
-    MicrosliceSource(uint16_t eq_id, uint8_t sys_id, uint8_t sys_ver)
-        : _eq_id {eq_id}, _sys_id {sys_id}, _sys_ver {sys_ver} {};
-
-    void add(uint64_t mc_index, std::vector<uint8_t> content)
-    {
-        // what
-        MicrosliceContainer mc {_desc(mc_index, content.size()),
-                                content.data()};
-        // where
-        auto it = _microslices.find(mc_index);
-        if (it != end(_microslices)) {
-            it->second = mc; // overwrite existing
-        } else {
-            _microslices.insert(it, {mc_index, mc}); // add new
-        }
-    };
-
-    MicrosliceContainer get(uint64_t mc_index)
-    {
-        auto it = _microslices.find(mc_index);
-        if (it != end(_microslices)) {
-            return it->second;
-        } else {
-            auto desc = _desc(mc_index, 0);
-            return {desc, nullptr};
-        }
-    };
-
-private:
-    uint16_t _eq_id;
-    uint8_t _sys_id, _sys_ver;
-    fles::MicrosliceDescriptor _desc(uint64_t index, uint32_t size)
-    {
-        return {0xDD, // hdr_id
-                0x01, // hdr_ver
-                _eq_id,
-                0, // flags
-                _sys_id,
-                _sys_ver,
-                index,
-                0, // crc
-                size};
-    };
-    std::unordered_map<uint64_t, MicrosliceContainer> _microslices;
-};
 
 // one MicrosliceSource per eq_id
 using MicrosliceSourceMap = std::unordered_map<uint16_t, MicrosliceSource>;
