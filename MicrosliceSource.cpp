@@ -9,7 +9,7 @@ MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id, uint8_t sys_v
 {
 };
 
-void MicrosliceSource::add(uint64_t mc_index, std::vector<uint8_t> content)
+void MicrosliceSource::add(uint64_t mc_index, const std::vector<uint8_t>& content)
 {
     // what
     auto mc = MicrosliceContainer {_desc(mc_index, content.size()),
