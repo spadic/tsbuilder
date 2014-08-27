@@ -1,3 +1,4 @@
+#include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
 #include "StorableTimeslice.hpp"
 #include "TimesliceOutputArchive.hpp"
@@ -39,7 +40,9 @@ void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
     auto m = ts_index * TIMESLICE_LENGTH;
     for (auto i = 0; i < TIMESLICE_LENGTH; i++) {
         auto mc = mc_source.get(m+i);
-        ts.append_microslice(c, m+i, mc.desc, mc.content);
+        // TODO add overload:
+        //ts.append_microslice(uint32_t comp_index, MicrosliceContainer& mc)
+        ts.append_microslice(c, m+i, mc.desc, mc.content.data());
     }
 }
 

@@ -1,3 +1,4 @@
+#include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
 
 namespace fles {
@@ -9,11 +10,10 @@ MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id, uint8_t sys_v
 {
 };
 
-void MicrosliceSource::add(uint64_t mc_index, const std::vector<uint8_t>& content)
+void MicrosliceSource::add(uint64_t mc_index, std::vector<uint8_t> content)
 {
     // what
-    auto mc = MicrosliceContainer {_desc(mc_index, content.size()),
-                                   content.data()};
+    auto mc = MicrosliceContainer {_desc(mc_index), std::move(content)};
     // where
     auto it = _microslices.find(mc_index);
     if (it != end(_microslices)) {
@@ -29,12 +29,12 @@ MicrosliceContainer MicrosliceSource::get(uint64_t mc_index)
     if (it != end(_microslices)) {
         return it->second;
     } else {
-        auto desc = _desc(mc_index, 0);
-        return {desc, nullptr};
+        return {_desc(mc_index), {}};
     }
 }
 
-MicrosliceDescriptor MicrosliceSource::_desc(uint64_t index, uint32_t size)
+// create the descriptor for an empty microslice with given index
+MicrosliceDescriptor MicrosliceSource::_desc(uint64_t index)
 {
     return {0xDD, // hdr_id
             0x01, // hdr_ver
@@ -44,7 +44,9 @@ MicrosliceDescriptor MicrosliceSource::_desc(uint64_t index, uint32_t size)
             _sys_ver,
             index,
             0, // crc
-            size};
+            0, // size -> set by MicrosliceContainer constructor
+            0 // offset -> set by StorableTimeslice::append_microslice
+    };
 }
 
 }
