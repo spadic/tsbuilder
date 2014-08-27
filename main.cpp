@@ -37,7 +37,7 @@ void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
 
     // iterate over microslice interval corresponding to timeslice index
     auto m = ts_index * TIMESLICE_LENGTH;
-    for (auto i = 0; i < TIMESLICE_LENGTH; i++) {
+    for (size_t i = 0; i < TIMESLICE_LENGTH; i++) {
         auto mc = mc_source.get(m+i);
         // TODO add overload:
         //ts.append_microslice(uint32_t comp_index, MicrosliceContainer& mc)
