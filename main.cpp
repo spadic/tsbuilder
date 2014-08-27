@@ -6,11 +6,12 @@
 #include <unordered_map>
 #include <vector>
 
+//--------------------------------------------------------------------
 
-//-------------------
 // one MicrosliceSource per eq_id
 using MicrosliceSourceMap = std::unordered_map<uint16_t, fles::MicrosliceSource>;
 
+//--------------------------------------------------------------------
 
 const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
 
@@ -45,7 +46,7 @@ void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
     }
 }
 
-//-------------------
+//--------------------------------------------------------------------
 
 const size_t NUM_COMPONENTS {1};
 const size_t NUM_MICROSLICES {100}; // total, over all timeslices
