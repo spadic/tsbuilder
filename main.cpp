@@ -2,21 +2,20 @@
 #include "MicrosliceSource.hpp"
 #include "StorableTimeslice.hpp"
 #include "TimesliceOutputArchive.hpp"
+#include <cstdio>
 #include <unordered_map>
 #include <vector>
-#include <cstdio>
 
 
 //-------------------
-
-
 // one MicrosliceSource per eq_id
-using MicrosliceSourceMap = std::unordered_map<uint16_t, MicrosliceSource>;
+using MicrosliceSourceMap = std::unordered_map<uint16_t, fles::MicrosliceSource>;
+
+
+const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
 
 // one timeslice per timeslice index
 std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
-
-const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
 
 void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
                               uint16_t eq_id, uint64_t ts_index)
