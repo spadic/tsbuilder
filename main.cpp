@@ -33,16 +33,14 @@ void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
     // get component index by creating a new component
     auto c = ts.append_component(TIMESLICE_LENGTH, ts_index);
 
-    // get {mc_index: (desc, content), ...} object for this eq_id
+    // get MicrosliceSource object for this eq_id
     auto& mc_source = mc_sources.at(eq_id);
 
     // iterate over microslice interval corresponding to timeslice index
     auto m = ts_index * TIMESLICE_LENGTH;
     for (size_t i = 0; i < TIMESLICE_LENGTH; i++) {
         auto mc = mc_source.get(m+i);
-        // TODO add overload:
-        //ts.append_microslice(uint32_t comp_index, MicrosliceContainer& mc)
-        ts.append_microslice(c, m+i, mc.desc, mc.content.data());
+        ts.append_microslice(c, i, mc);
     }
 }
 
@@ -78,16 +76,17 @@ for (uint64_t ts_index {0}; ts_index < NUM_MICROSLICES/TIMESLICE_LENGTH; ts_inde
                 0, // flags
                 SYS_ID[comp_index],
                 SYS_VER[comp_index],
-                mc_index, // idx TODO
+                mc_index, // idx
                 0, // crc
-                mc_size, // size TODO
+                0, // size
                 0 // offset -> overwritten by StorableTimeslice::append_microslice
             };
-            uint8_t mc_content[mc_size]; // TODO
+            auto mc_content = std::vector<uint8_t> {};
             for (uint8_t i {0}; i < mc_size; i++) {
-                mc_content[i] = i;
+                mc_content.push_back(i);
             }
-            ts.append_microslice(comp_index, mc_index, mc_desc, mc_content);
+            auto mc = fles::MicrosliceContainer {mc_desc, mc_content};
+            ts.append_microslice(comp_index, mc_index, mc);
         }
     } while (comp_index+1 < NUM_COMPONENTS);
     ar.write(ts);

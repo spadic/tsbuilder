@@ -52,12 +52,12 @@ uint32_t calc_mc_crc(const uint8_t *data, size_t len)
 
 void check_microslice(const fles::Timeslice& ts, size_t comp_idx, size_t mc_idx)
 {
-    auto& desc = ts.descriptor(comp_idx, mc_idx);
+    auto& mc = ts.microslice(comp_idx, mc_idx);
     printf("---- microslice %d ----\n", mc_idx);
-    print_descriptor(desc);
+    print_descriptor(mc.desc);
     printf("- - contents - -\n");
-    const uint8_t *data = ts.content(comp_idx, mc_idx);
-    size_t len = desc.size;
+    const uint8_t *data = mc.content;
+    size_t len = mc.desc.size;
     print_mc_contents(data, len);
     printf("CRC: 0x%08X\n", calc_mc_crc(data, len));
 }
