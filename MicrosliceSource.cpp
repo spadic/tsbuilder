@@ -3,31 +3,26 @@
 
 namespace fles {
 
-MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id, uint8_t sys_ver)
+MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id,
+                                   uint8_t sys_ver, uint64_t start_index)
 : _eq_id {eq_id},
   _sys_id {sys_id},
-  _sys_ver {sys_ver}
+  _sys_ver {sys_ver},
+  _start_idx {start_index}
 {
 };
 
-void MicrosliceSource::add(uint64_t mc_index, std::vector<uint8_t> content)
+void MicrosliceSource::add(std::vector<uint8_t> content)
 {
-    // what
-    auto mc = MicrosliceContainer {_desc(mc_index), std::move(content)};
-    // where
-    auto it = _microslices.find(mc_index);
-    if (it != end(_microslices)) {
-        it->second = mc; // overwrite existing
-    } else {
-        _microslices.insert(it, {mc_index, mc}); // add new
-    }
+    auto mc_index = _start_idx + _microslices.size();
+    _microslices.emplace_back(_desc(mc_index), std::move(content));
 }
 
 MicrosliceContainer MicrosliceSource::get(uint64_t mc_index)
 {
-    auto it = _microslices.find(mc_index);
-    if (it != end(_microslices)) {
-        return it->second;
+    if (mc_index >= _start_idx &&
+        mc_index < _start_idx + _microslices.size()) {
+        return _microslices[mc_index - _start_idx];
     } else {
         return {_desc(mc_index), {}};
     }
