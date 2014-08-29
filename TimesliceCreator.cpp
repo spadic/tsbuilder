@@ -12,15 +12,15 @@ fles::StorableTimeslice *do_get()
     }
     if (_it != end(_timeslices)) {
         _last = _it; // save position for next time
-        auto& ts = it->second;
-        // TODO how to return a unique_ptr of this timeslice when it is
-        // still in the map?
+        // need to make a copy on the heap, to not let the unique_ptr
+        // destroy the contents of the map
+        return new fles::StorableTimeslice {std::move(it->second)};
     }
 }
 
 void TimesliceCreator::add_microslices(const MicrosliceSource& mc_source)
 {
-    auto ts_index = ;//TODO
+    auto ts_index = 0;//TODO
     auto& ts = _timeslices.emplace(ts_index, _ts_len).first->second;
     auto comp_index = ts.append_component(_ts_len, ts_index);
     auto mc_index = ts_index * _ts_len;
