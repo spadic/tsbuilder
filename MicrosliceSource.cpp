@@ -8,24 +8,28 @@ MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id,
 : _eq_id {eq_id},
   _sys_id {sys_id},
   _sys_ver {sys_ver},
-  _start_idx {start_index}
+  start_index {start_index}
 {
 };
 
 void MicrosliceSource::add(std::vector<uint8_t> content)
 {
-    auto mc_index = _start_idx + _microslices.size();
+    auto mc_index = start_index + size();
     _microslices.emplace_back(_desc(mc_index), std::move(content));
 }
 
 MicrosliceContainer MicrosliceSource::get(uint64_t mc_index)
 {
-    if (mc_index >= _start_idx &&
-        mc_index < _start_idx + _microslices.size()) {
-        return _microslices[mc_index - _start_idx];
+    if (mc_index >= start_index && mc_index < start_index + size()) {
+        return _microslices[mc_index - start_index];
     } else {
         return {_desc(mc_index), {}};
     }
+}
+
+size_t MicrosliceSource::size()
+{
+    return _microslices.size();
 }
 
 // create the descriptor for an empty microslice with given index

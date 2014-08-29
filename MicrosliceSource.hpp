@@ -6,8 +6,8 @@ namespace fles {
 struct MicrosliceContainer;
 
 /**
- * Represents a source of microslices which would form one component of a
- * timeslice.
+ * Represents a source of microslices which would form one component of
+ * one of a sequence of timeslices, each.
  */
 class MicrosliceSource {
 public:
@@ -21,12 +21,15 @@ public:
     MicrosliceContainer get(uint64_t mc_index);
     /**< Return the microslice at the given index. If no microslice was
      * added at this index, an empty microslice is returned. */
+    size_t size();
+    /**< Return the number of added microslices. **/
+    
+    const uint64_t start_index;
 
 private:
-    uint16_t _eq_id;
-    uint8_t _sys_id;
-    uint8_t _sys_ver;
-    uint64_t _start_idx;
+    const uint16_t _eq_id;
+    const uint8_t _sys_id;
+    const uint8_t _sys_ver;
     MicrosliceDescriptor _desc(uint64_t index);
     std::vector<MicrosliceContainer> _microslices;
 };
