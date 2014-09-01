@@ -1,4 +1,4 @@
-TimesliceCreator::TimesliceCreator(size_t ts_len, uint64_t start_index)
+TimesliceEmulator::TimesliceEmulator(size_t ts_len, uint64_t start_index)
 : _ts_len {ts_len}, _start_idx {start_index}
 {
 }
@@ -18,7 +18,7 @@ fles::StorableTimeslice *do_get()
     }
 }
 
-void TimesliceCreator::add_microslices(const MicrosliceSource& mc_source)
+void TimesliceEmulator::add_microslices(const MicrosliceSource& mc_source)
 {
     auto ts_index = 0;//TODO
     auto& ts = _timeslices.emplace(ts_index, _ts_len).first->second;

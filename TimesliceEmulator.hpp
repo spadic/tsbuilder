@@ -1,7 +1,7 @@
 #include "MicrosliceSource.hpp"
 #include "TimesliceSource.hpp"
 
-class TimesliceCreator : public fles::TimesliceSource {
+class TimesliceEmulator : public fles::TimesliceSource {
 public:
     void add_microslices(const MicrosliceSource& mc_source);
 
