@@ -1,48 +1,10 @@
+#include "TimesliceEmulator.hpp"
 #include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
-#include "StorableTimeslice.hpp"
 #include "TimesliceOutputArchive.hpp"
 #include <cstdio>
 #include <map>
 #include <vector>
-
-//--------------------------------------------------------------------
-
-// one MicrosliceSource per eq_id
-using MicrosliceSourceMap = std::unordered_map<uint16_t, fles::MicrosliceSource>;
-
-//--------------------------------------------------------------------
-
-const size_t TIMESLICE_LENGTH {10}; // microslices per timeslice
-
-// one timeslice per timeslice index
-std::unordered_map<uint64_t, fles::StorableTimeslice> timeslices;
-
-void add_component_from_eq_id(MicrosliceSourceMap mc_sources,
-                              uint16_t eq_id, uint64_t ts_index)
-{
-    // get timeslice corresponding to timeslice index, create if necessary
-    // roughly equivalent to the following Python code:
-    //   if ts_index not in timeslices:
-    //       timeslices[ts_index] = Timeslice(TIMESLICE_LENGTH)
-    //   ts = timeslices[ts_index]
-    // or simply:
-    //   ts = timeslices.setdefault(ts_index, Timeslice(TIMESLICE_LENGTH))
-    auto& ts = timeslices.emplace(ts_index, TIMESLICE_LENGTH).first->second;
-
-    // get component index by creating a new component
-    auto c = ts.append_component(TIMESLICE_LENGTH, ts_index);
-
-    // get MicrosliceSource object for this eq_id
-    auto& mc_source = mc_sources.at(eq_id);
-
-    // iterate over microslice interval corresponding to timeslice index
-    auto m = ts_index * TIMESLICE_LENGTH;
-    for (size_t i = 0; i < TIMESLICE_LENGTH; i++) {
-        auto mc = mc_source.get(m+i);
-        ts.append_microslice(c, i, mc);
-    }
-}
 
 //--------------------------------------------------------------------
 
@@ -59,7 +21,18 @@ fles::TimesliceOutputArchive ar {"output.tsa"};
 
 int main()
 {
+    auto emu = TimesliceEmulator {10, 15};
+    auto mc_src = fles::MicrosliceSource {1, 0x40, 0x01, 8};
+    for (size_t i = 0; i < 5; i++) {
+        auto v = std::vector<uint8_t> (7, i);
+        mc_src.add(v);
+    }
+    emu.add_microslices(mc_src);
+    while (auto *ts = emu.get_timeslice()) {
+        ar.write(*ts);
+    }
 
+/*
 for (uint64_t ts_index {0}; ts_index < NUM_MICROSLICES/TIMESLICE_LENGTH; ts_index++) {
     fles::StorableTimeslice ts {TIMESLICE_LENGTH};
 
@@ -91,5 +64,6 @@ for (uint64_t ts_index {0}; ts_index < NUM_MICROSLICES/TIMESLICE_LENGTH; ts_inde
     } while (comp_index+1 < NUM_COMPONENTS);
     ar.write(ts);
 }
+*/
 
 } // main
