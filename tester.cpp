@@ -36,6 +36,7 @@ void print_mc_contents(const uint8_t *data, size_t len)
         printf("%02X", data[i]);
         printf("%s", (i+1) % 4 ? " " : "\n");
     }
+    printf("\n");
 }
 
 uint32_t calc_mc_crc(const uint8_t *data, size_t len)

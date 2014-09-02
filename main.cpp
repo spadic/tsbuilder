@@ -23,12 +23,13 @@ int main()
 {
     auto bld = TimesliceBuilder {10, 15};
     auto mc_src = fles::MicrosliceSource {1, 0x40, 0x01, 8};
-    for (size_t i = 0; i < 5; i++) {
+    for (size_t i = 0; i < 5000; i++) {
         auto v = std::vector<uint8_t> (7, i);
         mc_src.add(v);
     }
     bld.add_microslices(mc_src);
     while (auto ts_up = bld.get()) {
+        printf("got timeslice @ %p\n", &(*ts_up));
         ar.write(*ts_up);
     }
 
