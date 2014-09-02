@@ -1,4 +1,4 @@
-#include "TimesliceEmulator.hpp"
+#include "TimesliceBuilder.hpp"
 #include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
 #include "TimesliceOutputArchive.hpp"
@@ -21,14 +21,14 @@ fles::TimesliceOutputArchive ar {"output.tsa"};
 
 int main()
 {
-    auto emu = TimesliceEmulator {10, 15};
+    auto bld = TimesliceBuilder {10, 15};
     auto mc_src = fles::MicrosliceSource {1, 0x40, 0x01, 8};
     for (size_t i = 0; i < 5; i++) {
         auto v = std::vector<uint8_t> (7, i);
         mc_src.add(v);
     }
-    emu.add_microslices(mc_src);
-    while (auto *ts = emu.get_timeslice()) {
+    bld.add_microslices(mc_src);
+    while (auto *ts = bld.get_timeslice()) {
         ar.write(*ts);
     }
 

@@ -4,9 +4,9 @@
 #include "MicrosliceSource.hpp"
 #include "StorableTimeslice.hpp"
 
-class TimesliceEmulator {
+class TimesliceBuilder {
 public:
-    TimesliceEmulator(size_t ts_len, uint64_t start_index=0);
+    TimesliceBuilder(size_t ts_len, uint64_t start_index=0);
     void add_microslices(fles::MicrosliceSource& mc_source);
     fles::StorableTimeslice *get_timeslice();
 

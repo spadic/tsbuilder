@@ -17,7 +17,7 @@ fles_ipc = env.Library(env.Glob('$FLES_IPC_DIR/*.cpp'))
 mcsource = env.Library('MicrosliceSource.cpp')
 
 # tscreator
-env.Program('tscreator', ['main.cpp', 'TimesliceEmulator.cpp', mcsource],
+env.Program('tscreator', ['main.cpp', 'TimesliceBuilder.cpp', mcsource],
             LIBS=[fles_ipc, 'boost_serialization'])
 
 # tstester

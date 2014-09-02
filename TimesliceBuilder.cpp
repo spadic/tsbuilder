@@ -1,14 +1,14 @@
-#include "TimesliceEmulator.hpp"
+#include "TimesliceBuilder.hpp"
 #include <cstdio>
 
-TimesliceEmulator::TimesliceEmulator(size_t ts_len, uint64_t start_index)
+TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
 : _ts_len {ts_len}, _start_idx {start_index}
 {
     _it = end(_timeslices);
     _last = end(_timeslices);
 }
 
-fles::StorableTimeslice *TimesliceEmulator::get_timeslice()
+fles::StorableTimeslice *TimesliceBuilder::get_timeslice()
 {
     printf("get_timeslice()\n");
     if (_last != end(_timeslices)) {
@@ -30,7 +30,7 @@ fles::StorableTimeslice *TimesliceEmulator::get_timeslice()
     }
 }
 
-void TimesliceEmulator::add_microslices(fles::MicrosliceSource& mc_source)
+void TimesliceBuilder::add_microslices(fles::MicrosliceSource& mc_source)
 {
     auto num_microslices = mc_source.size();
     printf("add %d microslices\n", num_microslices);
