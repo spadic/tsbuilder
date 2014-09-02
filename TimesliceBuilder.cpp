@@ -8,7 +8,7 @@ TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
     _last = end(_timeslices);
 }
 
-fles::StorableTimeslice *TimesliceBuilder::get_timeslice()
+fles::StorableTimeslice *TimesliceBuilder::do_get()
 {
     printf("get_timeslice()\n");
     if (_last != end(_timeslices)) {
@@ -22,9 +22,8 @@ fles::StorableTimeslice *TimesliceBuilder::get_timeslice()
     if (_it != end(_timeslices)) {
         printf("_last = _it\n");
         _last = _it; // save position for next time
-        // need to make a copy on the heap, to not let the unique_ptr
-        // destroy the contents of the map
-        return &_it->second;
+        // move out of the map onto the heap, will be managed by a unique_ptr
+        return new fles::StorableTimeslice {std::move(_it->second)};
     } else {
         return nullptr;
     }

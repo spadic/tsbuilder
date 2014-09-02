@@ -28,8 +28,8 @@ int main()
         mc_src.add(v);
     }
     bld.add_microslices(mc_src);
-    while (auto *ts = bld.get_timeslice()) {
-        ar.write(*ts);
+    while (auto ts_up = bld.get()) {
+        ar.write(*ts_up);
     }
 
 /*
