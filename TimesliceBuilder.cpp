@@ -12,7 +12,7 @@ TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
 
 std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
 {
-    auto ts_p = static_cast<StorableTimeslice *>(nullptr);
+    auto ts = static_cast<StorableTimeslice *>(nullptr);
 
     // Find the position of the next timeslice we want to return, which
     // is the the one with the lowest index higher than what we returned
@@ -26,10 +26,10 @@ std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
     // where it will be picked up by a unique_ptr.
     if (it != end(_timeslices)) {
         _last = it;
-        ts_p = new StorableTimeslice {std::move(it->second)};
+        ts = new StorableTimeslice {std::move(it->second)};
     }
 
-    return std::unique_ptr<StorableTimeslice> {ts_p};
+    return std::unique_ptr<StorableTimeslice> {ts};
 }
 
 void TimesliceBuilder::add_microslices(MicrosliceSource& mc_source)
