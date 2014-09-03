@@ -1,5 +1,7 @@
-#include "MicrosliceSource.hpp"
+// local
 #include "TimesliceBuilder.hpp"
+// fles_ipc
+#include "MicrosliceSource.hpp" // needs microslice branch
 #include "TimesliceOutputArchive.hpp"
 #include <cstdio>
 

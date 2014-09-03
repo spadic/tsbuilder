@@ -1,5 +1,6 @@
-#include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
+// fles_ipc
+#include "MicrosliceContainer.hpp" // needs microslice branch
 
 namespace fles {
 

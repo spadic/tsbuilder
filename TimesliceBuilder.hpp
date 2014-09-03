@@ -1,9 +1,11 @@
 #pragma once
 
-#include <map>
-#include "TimesliceSource.hpp"
+// fles_ipc
 #include "StorableTimeslice.hpp"
-
+// system
+#include <map>
+#include <memory>
+// forward declarations
 namespace fles {
 class MicrosliceSource;
 }
@@ -20,4 +22,3 @@ private:
     size_t _ts_len;
     uint64_t _start_idx;
 };
-
