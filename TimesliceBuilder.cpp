@@ -7,33 +7,26 @@ namespace fles {
 TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
 : _ts_len {ts_len}, _start_idx {start_index}
 {
-    // invalidate both iterators
-    _it = end(_timeslices);
-    _last = end(_timeslices);
+    _last = end(_timeslices); // invalidate
 }
 
 std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
 {
     auto ts_p = static_cast<StorableTimeslice *>(nullptr);
 
-    // The first time we get here, we have to initialize `_it` manually to
-    // the beginning. From then on, `_last` will always point to what we
-    // returned previously and we position `_it` next to that, which could
-    // be off the end. If we had reached the end before, but additional
-    // entries have been added in the meantime, this ensures that we
-    // continue at the correct position.
-    if (_last == end(_timeslices)) {
-        _it = begin(_timeslices);
-    } else {
-        _it = next(_last);
-    }
+    // Find the position of the next timeslice we want to return, which
+    // is the the one with the lowest index higher than what we returned
+    // the last time (may have been added in the meantime).
+    // If we come here for the first time, `_last` has not yet been set
+    // and we pick the first timeslice manually.
+    auto it = (_last != end(_timeslices)) ? next(_last) : begin(_timeslices);
 
-    // If there is an output value, we remember the position and move the
-    // timeslice out of the map onto the heap, from where it will be
-    // managed by a unique_ptr.
-    if (_it != end(_timeslices)) {
-        _last = _it;
-        ts_p = new StorableTimeslice {std::move(_it->second)};
+    // If there is such a timeslice, we remember its position and move it
+    // out of the map (where it is no longer needed) onto the heap, from
+    // where it will be picked up by a unique_ptr.
+    if (it != end(_timeslices)) {
+        _last = it;
+        ts_p = new StorableTimeslice {std::move(it->second)};
     }
 
     return std::unique_ptr<StorableTimeslice> {ts_p};

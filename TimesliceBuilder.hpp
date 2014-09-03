@@ -18,7 +18,7 @@ public:
 
 private:
     std::map<uint64_t, StorableTimeslice> _timeslices;
-    decltype(_timeslices)::iterator _it, _last;
+    decltype(_timeslices)::iterator _last;
     size_t _ts_len;
     uint64_t _start_idx;
 };
