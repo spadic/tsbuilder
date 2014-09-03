@@ -25,7 +25,7 @@ public:
      * added at this index, an empty microslice is returned. */
     size_t size();
     /**< Return the number of added microslices. **/
-    
+
     const uint64_t start_index;
 
 private:
