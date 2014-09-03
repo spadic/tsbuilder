@@ -36,6 +36,7 @@ void print_mc_contents(const uint8_t *data, size_t len)
         printf("%02X", data[i]);
         printf("%s", (i+1) % 4 ? " " : "\n");
     }
+    printf("\n");
 }
 
 uint32_t calc_mc_crc(const uint8_t *data, size_t len)
@@ -52,7 +53,7 @@ uint32_t calc_mc_crc(const uint8_t *data, size_t len)
 
 void check_microslice(const fles::Timeslice& ts, size_t comp_idx, size_t mc_idx)
 {
-    auto& mc = ts.microslice(comp_idx, mc_idx);
+    auto& mc = ts.get_microslice(comp_idx, mc_idx);
     printf("---- microslice %d ----\n", mc_idx);
     print_descriptor(mc.desc);
     printf("- - contents - -\n");
