@@ -29,10 +29,9 @@ public:
     const uint64_t start_index;
 
 private:
-    uint16_t _eq_id;
-    uint8_t _sys_id;
-    uint8_t _sys_ver;
-    uint64_t _start_idx;
+    const uint16_t _eq_id;
+    const uint8_t _sys_id;
+    const uint8_t _sys_ver;
     MicrosliceDescriptor _desc(uint64_t index);
     std::vector<MicrosliceContainer> _microslices;
 };
