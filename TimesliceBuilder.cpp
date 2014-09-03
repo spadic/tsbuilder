@@ -3,6 +3,8 @@
 #include "MicrosliceSource.hpp" // needs microslice branch
 #include <cstdio>
 
+namespace fles {
+
 TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
 : _ts_len {ts_len}, _start_idx {start_index}
 {
@@ -10,7 +12,7 @@ TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
     _last = end(_timeslices);
 }
 
-std::unique_ptr<fles::StorableTimeslice> TimesliceBuilder::get()
+std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
 {
     printf("get_timeslice()\n");
     if (_last != end(_timeslices)) {
@@ -22,22 +24,22 @@ std::unique_ptr<fles::StorableTimeslice> TimesliceBuilder::get()
         printf("after _it = begin(_timeslices)\n");
     }
 
-    fles::StorableTimeslice *ts_p;
+    StorableTimeslice *ts_p;
 
     if (_it != end(_timeslices)) {
         printf("_last = _it\n");
         _last = _it; // save position for next time
         // move out of the map onto the heap, will be managed by a unique_ptr
-        //return new fles::StorableTimeslice {std::move(_it->second)};
+        //return new StorableTimeslice {std::move(_it->second)};
         printf("_it points to %p\n", &_it->second);
-        ts_p = new fles::StorableTimeslice {std::move(_it->second)};
+        ts_p = new StorableTimeslice {std::move(_it->second)};
     } else {
         ts_p = nullptr;
     }
-    return std::unique_ptr<fles::StorableTimeslice> {ts_p};
+    return std::unique_ptr<StorableTimeslice> {ts_p};
 }
 
-void TimesliceBuilder::add_microslices(fles::MicrosliceSource& mc_source)
+void TimesliceBuilder::add_microslices(MicrosliceSource& mc_source)
 {
     auto num_microslices = mc_source.size();
     printf("add %d microslices\n", num_microslices);
@@ -54,3 +56,5 @@ void TimesliceBuilder::add_microslices(fles::MicrosliceSource& mc_source)
         }
     }
 }
+
+} // namespace

@@ -12,7 +12,7 @@ int main()
         mc_src.add(v);
     }
 
-    auto bld = TimesliceBuilder {10, 15};
+    auto bld = fles::TimesliceBuilder {10, 15};
     bld.add_microslices(mc_src);
 
     fles::TimesliceOutputArchive ar {"output.tsa"};
