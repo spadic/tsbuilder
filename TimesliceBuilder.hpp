@@ -5,7 +5,7 @@
 // system
 #include <map>
 #include <memory>
-// forward declarations
+
 namespace fles {
 class MicrosliceSource;
 }
