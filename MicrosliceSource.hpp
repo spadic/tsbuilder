@@ -21,6 +21,10 @@ public:
     MicrosliceContainer get(uint64_t mc_index);
     /**< Return the microslice at the given index. If no microslice was
      * added at this index, an empty microslice is returned. */
+    size_t size();
+    /**< Return the number of added microslices. **/
+
+    const uint64_t start_index;
 
 private:
     uint16_t _eq_id;
