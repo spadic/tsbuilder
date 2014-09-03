@@ -1,7 +1,6 @@
 #include "TimesliceBuilder.hpp"
 
 #include "MicrosliceSource.hpp" // needs microslice branch
-#include <cstdio>
 
 namespace fles {
 
@@ -14,24 +13,17 @@ TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)
 
 std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
 {
-    printf("get_timeslice()\n");
     if (_last != end(_timeslices)) {
-        printf("_it = next(_last)\n");
         _it = next(_last); // try to resume from previous position
     } else {
-        printf("_it = begin(_timeslices)\n");
         _it = begin(_timeslices); // only once at the beginning
-        printf("after _it = begin(_timeslices)\n");
     }
 
     StorableTimeslice *ts_p;
 
     if (_it != end(_timeslices)) {
-        printf("_last = _it\n");
         _last = _it; // save position for next time
         // move out of the map onto the heap, will be managed by a unique_ptr
-        //return new StorableTimeslice {std::move(_it->second)};
-        printf("_it points to %p\n", &_it->second);
         ts_p = new StorableTimeslice {std::move(_it->second)};
     } else {
         ts_p = nullptr;
@@ -42,11 +34,9 @@ std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
 void TimesliceBuilder::add_microslices(MicrosliceSource& mc_source)
 {
     auto num_microslices = mc_source.size();
-    printf("add %d microslices\n", num_microslices);
     for (auto ts_index = mc_source.start_index / _ts_len;
          ts_index * _ts_len < mc_source.start_index + num_microslices;
          ts_index++) {
-        printf("ts_index = %d\n", ts_index);
         auto& ts = _timeslices.emplace(ts_index, _ts_len).first->second;
         auto comp_index = ts.append_component(_ts_len, ts_index);
         auto mc_index = ts_index * _ts_len;
