@@ -1,10 +1,7 @@
 #include "TimesliceBuilder.hpp"
-#include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
 #include "TimesliceOutputArchive.hpp"
 #include <cstdio>
-#include <map>
-#include <vector>
 
 //--------------------------------------------------------------------
 
