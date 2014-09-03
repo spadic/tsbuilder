@@ -1,3 +1,5 @@
+#pragma once
+
 #include "MicrosliceDescriptor.hpp"
 #include <vector>
 
@@ -6,8 +8,8 @@ namespace fles {
 struct MicrosliceContainer;
 
 /**
- * Represents a source of microslices which would form one component of a
- * timeslice.
+ * Represents a source of microslices which would form one component of
+ * one of a sequence of timeslices, each.
  */
 class MicrosliceSource {
 public:
