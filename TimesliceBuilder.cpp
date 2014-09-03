@@ -1,4 +1,5 @@
 #include "TimesliceBuilder.hpp"
+#include "MicrosliceSource.hpp"
 #include <cstdio>
 
 TimesliceBuilder::TimesliceBuilder(size_t ts_len, uint64_t start_index)

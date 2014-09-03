@@ -1,9 +1,12 @@
 #pragma once
 
 #include <map>
-#include "MicrosliceSource.hpp"
 #include "TimesliceSource.hpp"
 #include "StorableTimeslice.hpp"
+
+namespace fles {
+class MicrosliceSource;
+}
 
 class TimesliceBuilder {
 public:
