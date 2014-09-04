@@ -1,5 +1,6 @@
-#include "MicrosliceContainer.hpp"
 #include "MicrosliceSource.hpp"
+
+#include "MicrosliceContainer.hpp" // needs microslice branch
 
 namespace fles {
 

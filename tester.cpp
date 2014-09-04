@@ -1,8 +1,8 @@
 //! \author Michael Krieger
 
-#include <iostream>
-#include <cstdio>
 #include "TimesliceInputArchive.hpp"
+#include <cstdio>
+#include <iostream>
 
 void print_descriptor(const fles::MicrosliceDescriptor& desc)
 {
