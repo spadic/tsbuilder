@@ -34,10 +34,13 @@ std::unique_ptr<StorableTimeslice> TimesliceBuilder::get()
 
 void TimesliceBuilder::add_microslices(MicrosliceSource& mc_source)
 {
-    auto num_microslices = mc_source.size();
-    for (auto ts_index = mc_source.start_index / _ts_len;
-         ts_index * _ts_len < mc_source.start_index + num_microslices;
-         ts_index++) {
+    // calculate the range of timeslices we need to access
+    auto ts_first = mc_source.start_index / _ts_len;
+    auto ts_last = (mc_source.start_index + mc_source.size()) / _ts_len;
+
+    for (auto ts_index = ts_first; ts_index < ts_last; ts_index++) {
+        // get the timeslice with the current index or create it if it
+        // doesn't exist
         auto& ts = _timeslices.emplace(ts_index, _ts_len).first->second;
         auto comp_index = ts.append_component(_ts_len, ts_index);
         auto mc_index = ts_index * _ts_len;
