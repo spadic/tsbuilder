@@ -6,12 +6,10 @@ namespace fles {
 
 MicrosliceSource::MicrosliceSource(uint16_t eq_id, uint8_t sys_id,
                                    uint8_t sys_ver, uint64_t start_index)
-: _eq_id {eq_id},
-  _sys_id {sys_id},
-  _sys_ver {sys_ver},
-  start_index {start_index}
+: start_index {start_index},
+  _eq_id {eq_id}, _sys_id {sys_id}, _sys_ver {sys_ver}
 {
-};
+}
 
 void MicrosliceSource::add(std::vector<uint8_t> content)
 {
