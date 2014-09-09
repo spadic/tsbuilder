@@ -1,6 +1,6 @@
 #include "MicrosliceSource.hpp"
 
-#include "MicrosliceContainer.hpp"
+#include "StorableMicroslice.hpp"
 
 namespace fles {
 
@@ -17,7 +17,7 @@ void MicrosliceSource::add(std::vector<uint8_t> content)
     _microslices.emplace_back(_desc(mc_index), std::move(content));
 }
 
-MicrosliceContainer MicrosliceSource::get(uint64_t mc_index)
+StorableMicroslice MicrosliceSource::get(uint64_t mc_index)
 {
     if (mc_index >= start_index && mc_index < start_index + size()) {
         return _microslices[mc_index - start_index];

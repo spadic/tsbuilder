@@ -5,7 +5,7 @@
 
 namespace fles {
 
-struct MicrosliceContainer;
+struct StorableMicroslice;
 
 /**
  * Represents a source of microslices which would form one component of
@@ -20,7 +20,7 @@ public:
     void add(std::vector<uint8_t> content);
     /**< Create a new microslice with the given payload. The microslice
      * index contained in the descriptor is automatically incremented. */
-    MicrosliceContainer get(uint64_t mc_index);
+    StorableMicroslice get(uint64_t mc_index);
     /**< Return the microslice at the given index. If no microslice was
      * added at this index, an empty microslice is returned. */
     size_t size();
@@ -33,7 +33,7 @@ private:
     const uint8_t _sys_id;
     const uint8_t _sys_ver;
     MicrosliceDescriptor _desc(uint64_t index);
-    std::vector<MicrosliceContainer> _microslices;
+    std::vector<StorableMicroslice> _microslices;
 };
 
 }
