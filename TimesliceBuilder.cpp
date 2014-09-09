@@ -1,6 +1,6 @@
 #include "TimesliceBuilder.hpp"
 
-#include "MicrosliceSource.hpp" // needs microslice branch
+#include "MicrosliceSource.hpp"
 
 namespace fles {
 
