@@ -14,9 +14,9 @@ void TimesliceBuilder::add_microslices(MicrosliceSource& mc_source)
 {
     // calculate the range of timeslices we need to access
     auto ts_first = mc_source.start_index / _ts_len;
-    auto ts_last = (mc_source.start_index + mc_source.size()) / _ts_len;
+    auto ts_last = (mc_source.start_index + mc_source.size() - 1) / _ts_len;
 
-    for (auto ts_idx = ts_first; ts_idx < ts_last; ts_idx++) {
+    for (auto ts_idx = ts_first; ts_idx <= ts_last; ts_idx++) {
         // get the current timeslice or create it if it doesn't exist
         auto& ts = _timeslices.emplace(ts_idx, _ts_len).first->second;
 
