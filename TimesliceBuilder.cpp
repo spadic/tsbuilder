@@ -21,7 +21,7 @@ void TimesliceBuilder::add_microslices(MicrosliceSource& mc_source)
         auto& ts = _timeslices.emplace(ts_idx, _ts_len).first->second;
 
         // add all microslices belonging to this timeslice to a new component
-        auto comp_idx = ts.append_component(_ts_len, ts_idx);
+        auto comp_idx = ts.append_component(_ts_len);
         auto mc_base_idx = ts_idx * _ts_len;
         for (size_t i = 0; i < _ts_len; i++) {
             auto mc = mc_source.get(mc_base_idx + i);
