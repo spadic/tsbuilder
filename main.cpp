@@ -29,7 +29,7 @@ void add_microslice_contents(fles::MicrosliceSource& src,
 int main()
 {
     auto sources = std::vector<fles::MicrosliceSource> {};
-    auto contents = std::vector<flib::MicrosliceContents> {};
+    auto contents = std::vector<flib_dpb::MicrosliceContents> {};
 
     auto context = zmq::context_t {1};
     auto socket = zmq::socket_t {context, ZMQ_PULL};
@@ -65,7 +65,7 @@ int main()
             auto src_idx = *data++;
             if (!(src_idx < sources.size())) { continue; }
             add_microslice_contents(sources[src_idx], contents[src_idx]);
-            contents[src_idx] = flib::MicrosliceContents {};
+            contents[src_idx] = flib_dpb::MicrosliceContents {};
         }
         if (action == QUIT) {
             // [QUIT]
@@ -79,9 +79,9 @@ int main()
         // [---, src_idx, cbm_addr, d0, d1, ...]
         if (n < 3) { continue; }
         auto src_idx = *data++;
-        if (!(src_idx < sources.size())) { continue; }
+        if (!(src_idx < contents.size())) { continue; }
         auto cbm_addr = *data++;
-        sources[src_idx].add_dtm({cbm_addr, data, n-3});
+        contents[src_idx].add_dtm({cbm_addr, data, n-3});
     }
 
     //---- after the data is accumulated: write timeslices to file ---
