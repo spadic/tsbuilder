@@ -13,11 +13,10 @@ except KeyError:
 env.Append(CPPPATH=['$FLES_IPC_DIR'])
 fles_ipc = env.Library(env.Glob('$FLES_IPC_DIR/*.cpp'))
 
-# local libraries
-local_lib = env.Library(['MicrosliceSource.cpp', 'TimesliceBuilder.cpp'])
 
 # tsbuilder
-env.Program('tsbuilder', ['main.cpp', local_lib],
+env.Program('tsbuilder',
+            ['main.cpp', 'MicrosliceSource.cpp', 'TimesliceBuilder.cpp'],
             LIBS=[fles_ipc, 'boost_serialization'])
 
 # tstester
