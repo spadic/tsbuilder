@@ -53,7 +53,7 @@ Parameters parse_arguments(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
     auto const par = parse_arguments(argc, argv);
-    printf("options:\n"
+    printf("running with options:\n"
            "  TS_LEN: %d\n"
            "  TS_START_IDX: %d\n"
            "  OUTPUT_TSA: %s\n",
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
 
     auto m = zmq::message_t {};
     while (true) {
-        // wait for message and read as list of 16 bit words
+        // wait for message and interpret as list of 16 bit words
         socket.recv(&m);
         auto data = static_cast<uint16_t *>(m.data());
         auto n = m.size() / sizeof(*data);
