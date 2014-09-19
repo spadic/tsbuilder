@@ -29,7 +29,7 @@ void add_microslice_contents(fles::MicrosliceSource& src,
 struct Parameters {
     size_t ts_len;
     uint64_t ts_start_idx;
-    char *output_tsa;
+    const char *output_tsa;
 };
 
 Parameters parse_arguments(int argc, char *argv[])
