@@ -5,6 +5,7 @@
 #include "MicrosliceContents.hpp"
 
 #include <zmq.hpp>
+#include <cstdlib>
 #include <cstdio>
 
 //==== constants =====================================================
@@ -14,12 +15,7 @@ const uint16_t NEXT_MC {0xFFFE};
 const uint16_t ADD_SRC {0xFFFD};
 const char *IPC_ADDRESS = "ipc:///tmp/tsbuilder.ipc";
 
-// TODO from argv
-const char *OUTPUT_TSA = "output.tsa";
-const size_t TS_LEN = 10;
-const uint64_t TS_START_IDX = 0;
-
-//==== helper function ===============================================
+//==== helpers =======================================================
 
 void add_microslice_contents(fles::MicrosliceSource& src,
                              const flib_dpb::MicrosliceContents& mc)
@@ -30,10 +26,39 @@ void add_microslice_contents(fles::MicrosliceSource& src,
     src.add({start_p, end_p});
 }
 
+struct Parameters {
+    size_t ts_len;
+    uint64_t ts_start_idx;
+    char *output_tsa;
+};
+
+Parameters parse_arguments(int argc, char *argv[])
+{
+    auto par = Parameters {10, 0, "output.tsa"};
+    argv++;
+    if (argc > 1) {
+        par.ts_len = strtoul(*argv++, nullptr, 0);
+    }
+    if (argc > 2) {
+        par.ts_start_idx = strtoul(*argv++, nullptr, 0);
+    }
+    if (argc > 3) {
+        par.output_tsa = *argv++;
+    }
+    return par;
+}
+
 //==== main ==========================================================
 
-int main()
+int main(int argc, char *argv[])
 {
+    auto const par = parse_arguments(argc, argv);
+    printf("options:\n"
+           "  TS_LEN: %d\n"
+           "  TS_START_IDX: %d\n"
+           "  OUTPUT_TSA: %s\n",
+           par.ts_len, par.ts_start_idx, par.output_tsa);
+
     auto sources = std::vector<fles::MicrosliceSource> {};
     auto contents = std::vector<flib_dpb::MicrosliceContents> {};
 
@@ -121,14 +146,14 @@ int main()
 
     //---- after the data is accumulated: write timeslices to file ---
 
-    auto bld = fles::TimesliceBuilder {TS_LEN, TS_START_IDX};
+    auto bld = fles::TimesliceBuilder {par.ts_len, par.ts_start_idx};
     for (auto mc_src : sources) {
         bld.add_microslices(mc_src);
         printf("added %d microslices to TimesliceBuilder\n", mc_src.size());
     }
 
-    fles::TimesliceOutputArchive ar {OUTPUT_TSA};
-    printf("opened output archive %s\n", OUTPUT_TSA);
+    fles::TimesliceOutputArchive ar {par.output_tsa};
+    printf("opened output archive %s\n", par.output_tsa);
     while (auto ts_up = bld.get()) {
         ar.write(*ts_up);
         printf("wrote timeslice to archive\n");
