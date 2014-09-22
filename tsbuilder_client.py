@@ -5,6 +5,7 @@ import struct
 import subprocess
 import zmq
 
+
 #==== wrapper for TimesliceBuilder ZMQ interface =====================
 
 class TimesliceBuilder:
@@ -26,6 +27,7 @@ class TimesliceBuilder:
 
     def add_dtm(self, index, cbm_addr, data):
         self.send([0, index, cbm_addr] + data)
+
 
 #==== simple use case (only one component) ===========================
 
@@ -56,6 +58,7 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
 
     t.quit()
     p.communicate()
+
 
 if __name__=='__main__':
     def get_arg(argv, option):
