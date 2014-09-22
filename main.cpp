@@ -112,8 +112,12 @@ int main(int argc, char *argv[])
                        src_idx, num_src);
                 continue;
             }
-            add_microslice_contents(sources[src_idx], contents[src_idx]);
-            contents[src_idx] = flib_dpb::MicrosliceContents {};
+            auto& mc = contents[src_idx];
+            add_microslice_contents(sources[src_idx], mc);
+            printf("added Microslice with %d DTMs (%d Bytes)\n",
+                   mc.dtms().size(),
+                   mc.raw().size() * sizeof(*mc.raw().data()));
+            mc = flib_dpb::MicrosliceContents {};
             continue;
         }
         //---- [QUIT] ------------------------------------------------
