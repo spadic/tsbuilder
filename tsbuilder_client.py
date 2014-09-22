@@ -38,16 +38,23 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
                           str(ts_len), str(ts_start_idx), output_tsa])
     c = zmq.Context()
     s = c.socket(zmq.PUSH)
+    s.setsockopt(zmq.LINGER, 0) # must do this, otherwise the Python
+                                # interpreter hangs after p.terminate()
     s.connect('ipc:///tmp/tsbuilder.ipc')
 
     t = TimesliceBuilder(s)
     t.add_src(eq_id, sys_id, sys_ver, mc_start_idx)
-    with open(input_file) as f:
-        add_dtms_from_file(f, t, dtms_per_mc, words_per_dtm, cbmnet_addr)
-
-    t.quit()
-    p.communicate()
-
+    try:
+        with open(input_file) as f:
+            add_dtms_from_file(f, t, dtms_per_mc, words_per_dtm, cbmnet_addr)
+    except Exception as e:
+        print e
+        # kill ./tsbuilder
+        p.terminate()
+    else:
+        # send quit command to ./tsbuilder and wait for it to finish
+        t.quit()
+        p.communicate()
 
 def add_dtms_from_file(f, ts_builder, dtms_per_mc, words_per_dtm, cbmnet_addr):
     dtm = []
