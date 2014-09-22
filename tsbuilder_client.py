@@ -52,6 +52,7 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
                 dtm = []
                 dtms_left -= 1
             dtm.append(int(line, 16))
+        t.add_dtm(0, cbmnet_addr, dtm)
 
     t.quit()
     p.communicate()
