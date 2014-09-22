@@ -114,6 +114,7 @@ int main(int argc, char *argv[])
             }
             add_microslice_contents(sources[src_idx], contents[src_idx]);
             contents[src_idx] = flib_dpb::MicrosliceContents {};
+            continue;
         }
         //---- [QUIT] ------------------------------------------------
         if (action == QUIT) {
