@@ -61,14 +61,14 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
 
 
 if __name__=='__main__':
-    def get_arg(argv, option):
-        return argv[argv.index(option)+1]
     from sys import argv
+    def get_arg(option):
+        return argv[argv.index(option)+1]
 
     run_single_component(
       ts_len = 25,
       ts_start_idx = 0,
-      output_tsa = get_arg(argv, '-o'),
+      output_tsa = get_arg('-o'),
       eq_id = 1,
       sys_id = 0x40,
       sys_ver = 1,
@@ -76,5 +76,5 @@ if __name__=='__main__':
       cbmnet_addr = 0,
       dtms_per_mc = 0x100,
       words_per_dtm = 32,
-      input_file = get_arg(argv, '-i')
+      input_file = get_arg('-i')
     )
