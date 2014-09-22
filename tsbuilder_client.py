@@ -31,7 +31,7 @@ class TimesliceBuilder:
 
 def run_single_component(ts_len, ts_start_idx, output_tsa,
                          eq_id, sys_id, sys_ver, mc_start_idx,
-                         dtms_per_mc, words_per_dtm, input_file):
+                         cbmnet_addr, dtms_per_mc, words_per_dtm, input_file):
     p = subprocess.Popen(['./tsbuilder',
                           str(ts_len), str(ts_start_idx), output_tsa])
     c = zmq.Context()
@@ -48,7 +48,7 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
                 t.next_mc(0)
                 dtms_left = dtms_per_mc
             if len(dtm) == words_per_dtm:
-                t.add_dtm(0, 0, dtm)
+                t.add_dtm(0, cbmnet_addr, dtm)
                 dtm = []
                 dtms_left -= 1
             dtm.append(int(line, 16))
@@ -69,6 +69,7 @@ if __name__=='__main__':
       sys_id = 0x40,
       sys_ver = 1,
       mc_start_idx = 0,
+      cbmnet_addr = 0,
       dtms_per_mc = 0x100,
       words_per_dtm = 32,
       input_file = get_arg(argv, '-i')
