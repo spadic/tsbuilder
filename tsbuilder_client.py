@@ -31,21 +31,22 @@ class TimesliceBuilder:
 
 #==== simple use case (only one component) ===========================
 
-def add_dtms_from_file(filename, ts_builder,
+def add_dtms_from_file(filename, ts_builder, src_index,
                        dtms_per_mc, words_per_dtm, cbmnet_addr):
     with open(filename) as f:
         dtm = []
         dtms_left = dtms_per_mc
         for line in f:
             if not dtms_left:
-                ts_builder.next_mc(0)
+                ts_builder.next_mc(src_index)
                 dtms_left = dtms_per_mc
             if len(dtm) == words_per_dtm:
-                ts_builder.add_dtm(0, cbmnet_addr, dtm)
+                ts_builder.add_dtm(src_index, cbmnet_addr, dtm)
                 dtm = []
                 dtms_left -= 1
             dtm.append(int(line, 16))
-        ts_builder.add_dtm(0, cbmnet_addr, dtm)
+        ts_builder.add_dtm(src_index, cbmnet_addr, dtm)
+
 
 def run_single_component(ts_len, ts_start_idx, output_tsa,
                          eq_id, sys_id, sys_ver, mc_start_idx,
@@ -61,7 +62,8 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
     t = TimesliceBuilder(s)
     t.add_src(eq_id, sys_id, sys_ver, mc_start_idx)
     try:
-        add_dtms_from_file(input_file, t, dtms_per_mc, words_per_dtm, cbmnet_addr)
+        add_dtms_from_file(input_file, t, 0,
+                           dtms_per_mc, words_per_dtm, cbmnet_addr)
     except Exception as e:
         print e
         # kill ./tsbuilder
