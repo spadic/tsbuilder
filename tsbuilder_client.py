@@ -73,6 +73,7 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
         t.quit()
         p.communicate()
 
+
 if __name__=='__main__':
     from sys import argv
     def get_arg(option):
