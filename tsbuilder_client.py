@@ -55,8 +55,7 @@ def run_single_component(ts_len, ts_start_idx, output_tsa,
                           str(ts_len), str(ts_start_idx), output_tsa])
     c = zmq.Context()
     s = c.socket(zmq.PUSH)
-    s.setsockopt(zmq.LINGER, 0) # must do this, otherwise the Python
-                                # interpreter hangs after p.terminate()
+    s.LINGER = 0 # otherwise the Python interpreter hangs after p.terminate()
     s.connect('ipc:///tmp/tsbuilder.ipc')
 
     t = TimesliceBuilder(s)
